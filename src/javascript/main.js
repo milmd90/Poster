@@ -31,7 +31,7 @@ function Init() {
     // Get the canvas center
     CenterX = CanvasWidth / 2;
     CenterY = CanvasHeight / 2;
-    Camera = {x:0, y:0, r:20};
+    Camera = {x:0, y:0, z:1};
 }
 
 // UpdateRender renders whats in Squares and then updates the canvas

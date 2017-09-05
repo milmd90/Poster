@@ -1,23 +1,30 @@
+var Shapes = [];
+
 function MakePoster() {
-}
-
-
-function RenderShapes() {
-
-    var image = {
+    Shapes.push({
         points: [
             { x:100, y:100 },
             { x:200, y:100 },
             { x:200, y:200 },
             { x:100, y:200 },
         ],
-    };
-    RenderImage(image);
+    });
+}
 
+function RenderShapes() {
+    $.each(Shapes, function(i, image) {
+        var newImage = {};
+        newImage.points = image.points.map(function(point) {
+            return {
+                x: (point.x - Camera.x) / Camera.z,
+                y: (point.y - Camera.y) / Camera.z,
+            };
+        });
+        RenderImage(newImage);
+    });
 }
 
 function RenderImage(image) {
-    console.log("RenderImage");
     var ctx = BackContextHandle;
 
     // Set color
