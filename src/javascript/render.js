@@ -1,26 +1,47 @@
 var Shapes = [];
 
 function MakePoster() {
-    Shapes.push({
-        points: [
-            { x:100, y:100 },
-            { x:200, y:100 },
-            { x:200, y:200 },
-            { x:100, y:200 },
-        ],
-    });
+    var cellSize = 10;
+    var numWide = CanvasWidth / cellSize;
+    var numHigh = CanvasHeight / cellSize;
+
+    for (var x = 0; x < numWide; x++) {
+        var x1 = cellSize * x;
+        var x2 = cellSize * (x+1);
+        for (var y = 0; y < numHigh; y++) {
+            var y1 = cellSize * y;
+            var y2 = cellSize * (y+1);
+            Shapes.push({
+                points: [
+                    { x:x1, y:y1 },
+                    { x:x2, y:y1 },
+                    { x:x2, y:y2 },
+                    { x:x1, y:y2 },
+                ],
+                fill: {
+                    R: 150,
+                    G: x,
+                    B: y,
+                },
+                line: {
+                    R: 255,
+                    G: 255,
+                    B: 255,
+                },
+            });
+        }
+    }
 }
 
 function RenderShapes() {
     $.each(Shapes, function(i, image) {
-        var newImage = {};
-        newImage.points = image.points.map(function(point) {
+        image.points = image.points.map(function(point) {
             return {
                 x: (point.x - Camera.x) / Camera.z,
                 y: (point.y - Camera.y) / Camera.z,
             };
         });
-        RenderImage(newImage);
+        RenderImage(image);
     });
 }
 
@@ -28,27 +49,27 @@ function RenderImage(image) {
     var ctx = BackContextHandle;
 
     // Set color
-    var color = image.c;
-    if (color !== undefined) {
-        ctx.fillStyle = color;
+    var fill = image.fill;
+    if (fill !== undefined) {
+        ctx.fillStyle = RGBToString(fill);
     } else {
         var R = Math.floor(Math.random() * 256);
         var G = Math.floor(Math.random() * 256);
         var B = Math.floor(Math.random() * 256);
         ctx.fillStyle = "rgb(" + R + "," + G + "," + B + ")";
-        ctx.strokeStyle = "rgb(0,0,0)";
     }
 
     // Set line color
-    var line = image.l;
-    if (line !== undefined) {
-        ctx.fillStyle = line;
-    } else {
-        ctx.strokeStyle = "rgb(0,0,0)";
-    }
+    // var line = image.line;
+    // if (line !== undefined) {
+    //     ctx.strokeStyle = RGBToString(line);
+    // } else {
+    //     ctx.strokeStyle = "rgb(255,255,255)";
+    // }
+    // ctx.lineWidth = 1 / Camera.z;
 
     // Set line width
-    ctx.lineWidth = 100 / image.d;
+    ctx.lineWidth = .00001;
 
     // Draw from point to point
     var points = image.points;
@@ -60,4 +81,8 @@ function RenderImage(image) {
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
+}
+
+function RGBToString(obj) {
+    return "rgb(" + obj.R + "," + obj.G + "," + obj.B + ")";
 }
