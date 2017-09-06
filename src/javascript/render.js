@@ -1,6 +1,6 @@
 const right = "Right";
 const left = "Left";
-const cellSize = 20;
+const cellSize = 30;
 
 var Squares = [];
 var Arcs = [];
@@ -15,25 +15,25 @@ function MakePoster() {
     };
     dir = 3;
     onThe = right;
-    var levels = 3
+    var levels = 2;
 
     MakeBackground();
-    MakeForground(levels);
-    MakeForground(levels);
-    MakeForground(levels);
-    MakeForground(levels);
+    Stem(levels);
+    Stem(levels);
+    Stem(levels);
+    Stem(levels);
 }
 
-function MakeForground(level) {
-    HalfStem();
-    Leaf();
+function Stem(level) {
     if (level) {
-        MakeForground(level-1);
+        HalfStem();
+        Leaf();
+        Stem(level-1);
+        Leaf();
+        HalfStem();
     } else {
         Leaf();
     }
-    Leaf();
-    HalfStem();
 }
 
 function MakeBackground() {
@@ -91,6 +91,8 @@ function RenderShapes() {
 
     BackContextHandle.lineWidth = 1 / Camera.z;
     BackContextHandle.strokeStyle = "rgb(255,255,255)";
+    var len = Arcs.length;
+    var cStep = 256 / Arcs.length;
 
     $.each(Arcs, function(i, arc) {
         setTimeout(function() {
@@ -99,6 +101,13 @@ function RenderShapes() {
             var x = (arc.x * cellSize - Camera.x + CenterX) / Camera.z;
             var y = (arc.y * cellSize - Camera.y + CenterY) / Camera.z;
             var r = cellSize/2 / Camera.z;
+            var color = RGBToString({
+                R:0,
+                G:Math.floor(256*(Math.sin(2 * Math.PI * i / len)+1)/2),
+                B:Math.floor(256*(Math.cos(2 * Math.PI * i / len)+1)/2),
+            });
+            console.log(color);
+            BackContextHandle.strokeStyle = color
 
             BackContextHandle.beginPath();
             BackContextHandle.arc(x, y, r, arc.start, arc.end);
