@@ -1,26 +1,27 @@
 const right = "Right";
 const left = "Left";
-const cellSize = 50;
+const cellSize = 20;
 
 var Squares = [];
 var Arcs = [];
 var cursor;
 var dir;
-var last;
+var onThe;
 
 function MakePoster() {
     cursor = {
         x:-1,
-        y:1,
+        y:-1,
     };
     dir = 3;
-    last = left;
+    onThe = right;
+    var levels = 3
 
     MakeBackground();
-    // MakeForground(3);
-    // MakeForground(3);
-    // MakeForground(3);
-    MakeForground(0);
+    MakeForground(levels);
+    MakeForground(levels);
+    MakeForground(levels);
+    MakeForground(levels);
 }
 
 function MakeForground(level) {
@@ -93,8 +94,6 @@ function RenderShapes() {
 
     $.each(Arcs, function(i, arc) {
         setTimeout(function() {
-            console.log("setTimeout", i);
-
             BackContextHandle.save();
 
             var x = (arc.x * cellSize - Camera.x + CenterX) / Camera.z;
@@ -102,7 +101,7 @@ function RenderShapes() {
             var r = cellSize/2 / Camera.z;
 
             BackContextHandle.beginPath();
-            BackContextHandle.arc(x, y, r, arc.start, arc.end, true);
+            BackContextHandle.arc(x, y, r, arc.start, arc.end);
             BackContextHandle.stroke();
 
             BackContextHandle.restore();
@@ -110,7 +109,7 @@ function RenderShapes() {
             // Swap the backbuffer with the frontbuffer
             var ImageData = BackContextHandle.getImageData(0, 0, CanvasWidth, CanvasHeight);
             ContextHandle.putImageData(ImageData, 0, 0);
-        }, i*1000);
+        }, i*50);
     });
 }
 
@@ -194,31 +193,29 @@ function circleLeft() {
 }
 
 function turnRight() {
-    if (last == left) {
+    if (onThe == right) {
         hopRight();
     }
-    last = right;
+
+    Arcs.push({
+        x: cursor.x,
+        y: cursor.y,
+        start: .5*(dir-1)*Math.PI,
+        end: .5*dir*Math.PI,
+    });
+    dir = (dir+1)%4;
+}
+
+function turnLeft() {
+    if (onThe == left) {
+        hopLeft();
+    }
 
     Arcs.push({
         x: cursor.x,
         y: cursor.y,
         start: .5*dir*Math.PI,
         end: .5*(dir+1)*Math.PI,
-    });
-    dir = (dir+1)%4;
-}
-
-function turnLeft() {
-    if (last == right) {
-        hopLeft();
-    }
-    last = left;
-
-    Arcs.push({
-        x: cursor.x,
-        y: cursor.y,
-        start: .5*dir*Math.PI,
-        end: .5*(dir-1)*Math.PI,
     });
     dir = (dir+3)%4;
 }
@@ -229,6 +226,7 @@ function hopRight() {
         x:cursor.x + n.x,
         y:cursor.y + n.y,
     };
+    onThe = left;
 }
 
 function hopLeft() {
@@ -237,6 +235,7 @@ function hopLeft() {
         x:cursor.x + n.x,
         y:cursor.y + n.y,
     };
+    onThe = right;
 }
 
 function dirToCord(dir) {
@@ -244,11 +243,11 @@ function dirToCord(dir) {
         case 0:
             return {x:1, y:0};
         case 1:
-            return {x:0, y:-1};
+            return {x:0, y:1};
         case 2:
             return {x:-1, y:0};
         case 3:
-            return {x:0, y:1};
+            return {x:0, y:-1};
         default:
             console.log("dirToCord "+ dir%4);
     }
