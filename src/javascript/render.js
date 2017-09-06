@@ -1,6 +1,6 @@
 const right = "Right";
 const left = "Left";
-const cellSize = 20;
+const cellSize = 50;
 
 var Squares = [];
 var Arcs = [];
@@ -92,13 +92,25 @@ function RenderShapes() {
     BackContextHandle.strokeStyle = "rgb(255,255,255)";
 
     $.each(Arcs, function(i, arc) {
-        var x = (arc.x * cellSize - Camera.x + CenterX) / Camera.z;
-        var y = (arc.y * cellSize - Camera.y + CenterY) / Camera.z;
-        var r = cellSize/2 / Camera.z;
+        setTimeout(function() {
+            console.log("setTimeout", i);
 
-        BackContextHandle.beginPath();
-        BackContextHandle.arc(x, y, r, arc.start, arc.end, true);
-        BackContextHandle.stroke();
+            BackContextHandle.save();
+
+            var x = (arc.x * cellSize - Camera.x + CenterX) / Camera.z;
+            var y = (arc.y * cellSize - Camera.y + CenterY) / Camera.z;
+            var r = cellSize/2 / Camera.z;
+
+            BackContextHandle.beginPath();
+            BackContextHandle.arc(x, y, r, arc.start, arc.end, true);
+            BackContextHandle.stroke();
+
+            BackContextHandle.restore();
+
+            // Swap the backbuffer with the frontbuffer
+            var ImageData = BackContextHandle.getImageData(0, 0, CanvasWidth, CanvasHeight);
+            ContextHandle.putImageData(ImageData, 0, 0);
+        }, i*1000);
     });
 }
 
