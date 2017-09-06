@@ -1,6 +1,6 @@
 const right = "Right";
 const left = "Left";
-const cellSize = 100;
+const cellSize = 20;
 
 var Squares = [];
 var Arcs = [];
@@ -20,7 +20,7 @@ function MakePoster() {
     // MakeForground(3);
     // MakeForground(3);
     // MakeForground(3);
-    MakeForground(3);
+    MakeForground(0);
 }
 
 function MakeForground(level) {
@@ -71,7 +71,9 @@ function MakeBackground() {
 
 
 function RenderShapes() {
-    console.log("Rendering Squares");
+    BackContextHandle.lineWidth = 1 / Camera.z;
+    BackContextHandle.strokeStyle = "rgb(255,255,255)";
+
     $.each(Squares, function(i, image) {
         var newImage = {
             fill: image.fill,
@@ -86,16 +88,16 @@ function RenderShapes() {
         RenderImage(newImage);
     });
 
-    BackContextHandle.lineWidth = 1;
+    BackContextHandle.lineWidth = 1 / Camera.z;
     BackContextHandle.strokeStyle = "rgb(255,255,255)";
 
-    console.log("Rendering Arcs");
     $.each(Arcs, function(i, arc) {
-        var x = (arc.x - Camera.x) / Camera.z + CenterX;
-        var y = (arc.y - Camera.y) / Camera.z + CenterY;
+        var x = (arc.x * cellSize - Camera.x + CenterX) / Camera.z;
+        var y = (arc.y * cellSize - Camera.y + CenterY) / Camera.z;
+        var r = cellSize/2 / Camera.z;
 
         BackContextHandle.beginPath();
-        BackContextHandle.arc(x, y, cellSize/2, arc.start, arc.end, true);
+        BackContextHandle.arc(x, y, r, arc.start, arc.end, true);
         BackContextHandle.stroke();
     });
 }
@@ -123,9 +125,6 @@ function RenderImage(image) {
     // }
     // ctx.lineWidth = 1 / Camera.z;
 
-    // Set line width
-    ctx.lineWidth = .00001;
-
     // Draw from point to point
     var points = image.points;
     ctx.beginPath();
@@ -136,6 +135,10 @@ function RenderImage(image) {
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
+}
+
+function RGBToString(obj) {
+    return "rgb(" + obj.R + "," + obj.G + "," + obj.B + ")";
 }
 
 
@@ -184,14 +187,13 @@ function turnRight() {
     }
     last = right;
 
-    var next = (dir+1)%4;
     Arcs.push({
         x: cursor.x,
         y: cursor.y,
-        start: dir*Math.PI,
-        end: next*Math.PI,
+        start: .5*dir*Math.PI,
+        end: .5*(dir+1)*Math.PI,
     });
-    dir = next;
+    dir = (dir+1)%4;
 }
 
 function turnLeft() {
@@ -200,14 +202,13 @@ function turnLeft() {
     }
     last = left;
 
-    var next = (dir+3)%4;
     Arcs.push({
         x: cursor.x,
         y: cursor.y,
-        start: dir*Math.PI,
-        end: next*Math.PI,
+        start: .5*dir*Math.PI,
+        end: .5*(dir-1)*Math.PI,
     });
-    dir = next;
+    dir = (dir+3)%4;
 }
 
 function hopRight() {
@@ -239,8 +240,4 @@ function dirToCord(dir) {
         default:
             console.log("dirToCord "+ dir%4);
     }
-}
-
-function RGBToString(obj) {
-    return "rgb(" + obj.R + "," + obj.G + "," + obj.B + ")";
 }
