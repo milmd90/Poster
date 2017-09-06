@@ -10,6 +10,8 @@ var ContextHandle = null;
 var BackCanvasHandle = null;
 var BackContextHandle = null;
 
+var time = 0;
+
 // Initialize canvas, handlers, and camera
 function Init() {
     // Get context handles
@@ -47,4 +49,12 @@ function UpdateRender() {
     // Swap the backbuffer with the frontbuffer
     var ImageData = BackContextHandle.getImageData(0, 0, CanvasWidth, CanvasHeight);
     ContextHandle.putImageData(ImageData, 0, 0);
+}
+
+function ContRender() {
+    setTimeout(function() {
+        UpdateRender();
+        time += 5;
+        ContRender();
+    }, 10);
 }

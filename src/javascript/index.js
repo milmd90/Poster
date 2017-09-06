@@ -39,5 +39,6 @@ $( document ).ready(function() {
 
     Init();
     MakePoster();
-    UpdateRender();
+    // UpdateRender();
+    ContRender();
 });

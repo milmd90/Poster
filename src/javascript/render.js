@@ -106,8 +106,8 @@ function RenderShapes() {
 
         BackContextHandle.strokeStyle = RGBToString({
             R:0,
-            G:Math.floor(256*(Math.sin(2 * Math.PI * i / len)+1)/2),
-            B:Math.floor(256*(Math.cos(2 * Math.PI * i / len)+1)/2),
+            G:Math.floor(256*(Math.sin(2 * Math.PI * (i+time) / len)+1)/2),
+            B:Math.floor(256*(Math.cos(2 * Math.PI * (i+time) / len)+1)/2),
         });
 
         BackContextHandle.beginPath();
@@ -254,6 +254,6 @@ function dirToCord(dir) {
         case 3:
             return {x:0, y:-1};
         default:
-            console.log("dirToCord "+ dir%4);
+            console.log("Error: dirToCord "+ dir%4);
     }
 }
