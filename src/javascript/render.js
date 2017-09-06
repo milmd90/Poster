@@ -55,16 +55,6 @@ function MakeBackground() {
                     { x:x2, y:y2 },
                     { x:x1, y:y2 },
                 ],
-                fill: {
-                    R:Math.floor(256*(Math.cos(2 * Math.PI * y / numHigh)+1)/2),
-                    G:Math.floor(256*(Math.sin(2 * Math.PI * x / numWide)+1)/2),
-                    B:0,
-                },
-                line: {
-                    R: 255,
-                    G: 255,
-                    B: 255,
-                },
             });
         }
     }
@@ -79,9 +69,13 @@ function RenderShapes() {
     BackContextHandle.lineWidth = squareLine / Camera.z;
 
     $.each(Squares, function(i, image) {
+        var p =image.points[0];
         var newImage = {
-            fill: image.fill,
-            line: image.line,
+            fill: {
+                R:Math.floor(256*(Math.cos(2 * Math.PI * (p.y+time) / CanvasHeight)+1)/2),
+                G:Math.floor(256*(Math.sin(2 * Math.PI * (p.x+time) / CanvasWidth)+1)/2),
+                B:0,
+            },
         };
         newImage.points = image.points.map(function(point) {
             return {
@@ -126,10 +120,7 @@ function RenderImage(image) {
     if (fill !== undefined) {
         ctx.fillStyle = RGBToString(fill);
     } else {
-        var R = Math.floor(Math.random() * 256);
-        var G = Math.floor(Math.random() * 256);
-        var B = Math.floor(Math.random() * 256);
-        ctx.fillStyle = "rgb(" + R + "," + G + "," + B + ")";
+        ctx.fillStyle = "rgb(255,255,255)";
     }
 
     // Set line color
