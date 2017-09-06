@@ -6,9 +6,9 @@ $( document ).ready(function() {
         if (e.type==="keydown") {
             if (shift) {
                 if (e.which===38) {
-                    Camera.z -= .01;
+                    Camera.z *= .95;
                 } else if (e.which===40) {
-                    Camera.z += .01;
+                    Camera.z *= 1.05;
                 }
             } else {
                 if (e.which===39) {

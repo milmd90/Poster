@@ -1,7 +1,41 @@
-var Shapes = [];
+const right = "Right";
+const left = "Left";
+const cellSize = 100;
+
+var Squares = [];
+var Arcs = [];
+var cursor;
+var dir;
+var last;
 
 function MakePoster() {
-    var cellSize = 10;
+    cursor = {
+        x:-1,
+        y:1,
+    };
+    dir = 3;
+    last = left;
+
+    MakeBackground();
+    // MakeForground(3);
+    // MakeForground(3);
+    // MakeForground(3);
+    MakeForground(3);
+}
+
+function MakeForground(level) {
+    HalfStem();
+    Leaf();
+    if (level) {
+        MakeForground(level-1);
+    } else {
+        Leaf();
+    }
+    Leaf();
+    HalfStem();
+}
+
+function MakeBackground() {
     var numWide = CanvasWidth / cellSize;
     var numHigh = CanvasHeight / cellSize;
 
@@ -11,7 +45,7 @@ function MakePoster() {
         for (var y = 0; y < numHigh; y++) {
             var y1 = cellSize * y;
             var y2 = cellSize * (y+1);
-            Shapes.push({
+            Squares.push({
                 points: [
                     { x:x1, y:y1 },
                     { x:x2, y:y1 },
@@ -33,15 +67,36 @@ function MakePoster() {
     }
 }
 
+
+
+
 function RenderShapes() {
-    $.each(Shapes, function(i, image) {
-        image.points = image.points.map(function(point) {
+    console.log("Rendering Squares");
+    $.each(Squares, function(i, image) {
+        var newImage = {
+            fill: image.fill,
+            line: image.line,
+        };
+        newImage.points = image.points.map(function(point) {
             return {
                 x: (point.x - Camera.x) / Camera.z,
                 y: (point.y - Camera.y) / Camera.z,
             };
         });
-        RenderImage(image);
+        RenderImage(newImage);
+    });
+
+    BackContextHandle.lineWidth = 1;
+    BackContextHandle.strokeStyle = "rgb(255,255,255)";
+
+    console.log("Rendering Arcs");
+    $.each(Arcs, function(i, arc) {
+        var x = (arc.x - Camera.x) / Camera.z + CenterX;
+        var y = (arc.y - Camera.y) / Camera.z + CenterY;
+
+        BackContextHandle.beginPath();
+        BackContextHandle.arc(x, y, cellSize/2, arc.start, arc.end, true);
+        BackContextHandle.stroke();
     });
 }
 
@@ -81,6 +136,109 @@ function RenderImage(image) {
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
+}
+
+
+
+
+function Leaf() {
+    turnRight();
+    turnLeft();
+    circleRight();
+    turnLeft();
+    circleRight();
+    turnLeft();
+    circleRight();
+    turnLeft();
+    turnRight();
+    turnLeft();
+
+}
+
+function HalfStem() {
+    turnRight();
+    turnLeft();
+    circleRight();
+    turnLeft();
+    turnRight();
+    turnLeft();
+}
+
+function circleRight() {
+    turnRight();
+    turnRight();
+    turnRight();
+    turnRight();
+}
+
+function circleLeft() {
+    turnLeft();
+    turnLeft();
+    turnLeft();
+    turnLeft();
+}
+
+function turnRight() {
+    if (last == left) {
+        hopRight();
+    }
+    last = right;
+
+    var next = (dir+1)%4;
+    Arcs.push({
+        x: cursor.x,
+        y: cursor.y,
+        start: dir*Math.PI,
+        end: next*Math.PI,
+    });
+    dir = next;
+}
+
+function turnLeft() {
+    if (last == right) {
+        hopLeft();
+    }
+    last = left;
+
+    var next = (dir+3)%4;
+    Arcs.push({
+        x: cursor.x,
+        y: cursor.y,
+        start: dir*Math.PI,
+        end: next*Math.PI,
+    });
+    dir = next;
+}
+
+function hopRight() {
+    var n = dirToCord(dir+1);
+    cursor = {
+        x:cursor.x + n.x,
+        y:cursor.y + n.y,
+    };
+}
+
+function hopLeft() {
+    var n = dirToCord(dir-1);
+    cursor = {
+        x:cursor.x + n.x,
+        y:cursor.y + n.y,
+    };
+}
+
+function dirToCord(dir) {
+    switch ((dir+4)%4) {
+        case 0:
+            return {x:1, y:0};
+        case 1:
+            return {x:0, y:-1};
+        case 2:
+            return {x:-1, y:0};
+        case 3:
+            return {x:0, y:1};
+        default:
+            console.log("dirToCord "+ dir%4);
+    }
 }
 
 function RGBToString(obj) {
