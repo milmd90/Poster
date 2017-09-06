@@ -1,6 +1,8 @@
 const right = "Right";
 const left = "Left";
-const cellSize = 30;
+const cellSize = 20;
+const squareLine = cellSize / 10;
+const arcLine = cellSize / 10;
 
 var Squares = [];
 var Arcs = [];
@@ -54,9 +56,9 @@ function MakeBackground() {
                     { x:x1, y:y2 },
                 ],
                 fill: {
-                    R: 150,
-                    G: x,
-                    B: y,
+                    R:Math.floor(256*(Math.cos(2 * Math.PI * y / numHigh)+1)/2),
+                    G:Math.floor(256*(Math.sin(2 * Math.PI * x / numWide)+1)/2),
+                    B:0,
                 },
                 line: {
                     R: 255,
@@ -72,8 +74,9 @@ function MakeBackground() {
 
 
 function RenderShapes() {
-    BackContextHandle.lineWidth = 1 / Camera.z;
-    BackContextHandle.strokeStyle = "rgb(255,255,255)";
+
+    // Render background
+    BackContextHandle.lineWidth = squareLine / Camera.z;
 
     $.each(Squares, function(i, image) {
         var newImage = {
@@ -89,36 +92,29 @@ function RenderShapes() {
         RenderImage(newImage);
     });
 
-    BackContextHandle.lineWidth = 1 / Camera.z;
-    BackContextHandle.strokeStyle = "rgb(255,255,255)";
+    // Render design
+    BackContextHandle.lineWidth = arcLine / Camera.z;
+
     var len = Arcs.length;
     var cStep = 256 / Arcs.length;
 
     $.each(Arcs, function(i, arc) {
-        setTimeout(function() {
-            BackContextHandle.save();
 
-            var x = (arc.x * cellSize - Camera.x + CenterX) / Camera.z;
-            var y = (arc.y * cellSize - Camera.y + CenterY) / Camera.z;
-            var r = cellSize/2 / Camera.z;
-            var color = RGBToString({
-                R:0,
-                G:Math.floor(256*(Math.sin(2 * Math.PI * i / len)+1)/2),
-                B:Math.floor(256*(Math.cos(2 * Math.PI * i / len)+1)/2),
-            });
-            console.log(color);
-            BackContextHandle.strokeStyle = color
+        var x = (arc.x * cellSize - Camera.x + CenterX) / Camera.z;
+        var y = (arc.y * cellSize - Camera.y + CenterY) / Camera.z;
+        var r = cellSize/2 / Camera.z;
 
-            BackContextHandle.beginPath();
-            BackContextHandle.arc(x, y, r, arc.start, arc.end);
-            BackContextHandle.stroke();
+        BackContextHandle.strokeStyle = RGBToString({
+            R:0,
+            G:Math.floor(256*(Math.sin(2 * Math.PI * i / len)+1)/2),
+            B:Math.floor(256*(Math.cos(2 * Math.PI * i / len)+1)/2),
+        });
 
-            BackContextHandle.restore();
+        BackContextHandle.beginPath();
+        BackContextHandle.arc(x, y, r, arc.start, arc.end);
+        BackContextHandle.stroke();
 
-            // Swap the backbuffer with the frontbuffer
-            var ImageData = BackContextHandle.getImageData(0, 0, CanvasWidth, CanvasHeight);
-            ContextHandle.putImageData(ImageData, 0, 0);
-        }, i*50);
+
     });
 }
 
@@ -137,13 +133,13 @@ function RenderImage(image) {
     }
 
     // Set line color
-    // var line = image.line;
-    // if (line !== undefined) {
-    //     ctx.strokeStyle = RGBToString(line);
-    // } else {
-    //     ctx.strokeStyle = "rgb(255,255,255)";
-    // }
-    // ctx.lineWidth = 1 / Camera.z;
+    var line = image.line;
+    if (line !== undefined) {
+        ctx.strokeStyle = RGBToString(line);
+    } else {
+        ctx.strokeStyle = "rgb(255,255,255)";
+    }
+    ctx.lineWidth = 1 / Camera.z;
 
     // Draw from point to point
     var points = image.points;

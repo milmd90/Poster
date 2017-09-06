@@ -3,6 +3,7 @@ $( document ).ready(function() {
 
     var shift = false;
     $body.on('keydown keyup',function(e){
+        var stepSize = 5;
         if (e.type==="keydown") {
             if (shift) {
                 if (e.which===38) {
@@ -12,13 +13,13 @@ $( document ).ready(function() {
                 }
             } else {
                 if (e.which===39) {
-                    Camera.x -= 1;
+                    Camera.x += stepSize;
                 } else if (e.which===37) {
-                    Camera.x += 1;
+                    Camera.x -= stepSize;
                 } else if (e.which===40) {
-                    Camera.y -= 1;
+                    Camera.y += stepSize;
                 } else if (e.which===38) {
-                    Camera.y += 1;
+                    Camera.y -= stepSize;
                 }
             }
             UpdateRender();
