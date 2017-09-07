@@ -46,7 +46,7 @@ $( document ).ready(function() {
             var init_y = e.pageY;
             var c_x = Camera.x;
             var c_y = Camera.y;
-            
+
             $window.mousemove(function(e) {
                 Camera.x = c_x + (init_x - e.pageX);
                 Camera.y = c_y + (init_y - e.pageY);
@@ -64,4 +64,9 @@ $( document ).ready(function() {
     MakePoster();
     UpdateRender();
     // ContRender();
+
+    // Create hi res image
+    var imgData = document.getElementById('canvas').toDataURL("image/jpeg", 1.0);
+    $('#image').html('<img src="'+imgData+'"/>');
+
 });

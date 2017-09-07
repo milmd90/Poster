@@ -1,6 +1,6 @@
 const right = "Right";
 const left = "Left";
-const cellSize = 25;
+const cellSize = scale / 16;
 const squareLine = cellSize / 10;
 const arcLine = cellSize / 10;
 
@@ -121,7 +121,6 @@ function RenderShapes() {
             G:Math.floor(((max.G - min.G)/2) * (Math.cos(pi2 * ((i+time)/len + 0/4)) + 1) + min.G),
             B:Math.floor(((max.B - min.B)/2) * (Math.cos(pi2 * ((i+time)/len + 2/4)) + 1) + min.B),
         };
-        console.log(fill);
         BackContextHandle.strokeStyle = RGBToString(fill);
 
         BackContextHandle.beginPath();
