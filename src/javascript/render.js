@@ -79,25 +79,34 @@ function RenderShapes() {
         };
         newImage.points = image.points.map(function(point) {
             return {
-                x: (point.x - Camera.x) / Camera.z,
-                y: (point.y - Camera.y) / Camera.z,
+                x: point.x / Camera.z - Camera.x,
+                y: point.y / Camera.z - Camera.y,
             };
         });
         RenderImage(newImage);
     });
 
     // Render design
-    BackContextHandle.lineWidth = arcLine / Camera.z;
 
     var len = Arcs.length;
     var cStep = 256 / Arcs.length;
 
     $.each(Arcs, function(i, arc) {
 
-        var x = (arc.x * cellSize - Camera.x + CenterX) / Camera.z;
-        var y = (arc.y * cellSize - Camera.y + CenterY) / Camera.z;
+        var x = (arc.x * cellSize + CenterX) / Camera.z - Camera.x;
+        var y = (arc.y * cellSize + CenterY) / Camera.z - Camera.y;
         var r = cellSize/2 / Camera.z;
 
+        // White outline
+        BackContextHandle.lineWidth = 2*arcLine / Camera.z;
+        BackContextHandle.strokeStyle = "white";
+
+        BackContextHandle.beginPath();
+        BackContextHandle.arc(x, y, r, arc.start, arc.end);
+        BackContextHandle.stroke();
+
+        // Color arc
+        BackContextHandle.lineWidth = arcLine / Camera.z;
         BackContextHandle.strokeStyle = RGBToString({
             R:0,
             G:Math.floor(256*(Math.sin(2 * Math.PI * (i+time) / len)+1)/2),
@@ -107,7 +116,6 @@ function RenderShapes() {
         BackContextHandle.beginPath();
         BackContextHandle.arc(x, y, r, arc.start, arc.end);
         BackContextHandle.stroke();
-
 
     });
 }
@@ -120,7 +128,7 @@ function RenderImage(image) {
     if (fill !== undefined) {
         ctx.fillStyle = RGBToString(fill);
     } else {
-        ctx.fillStyle = "rgb(255,255,255)";
+        ctx.fillStyle = "white";
     }
 
     // Set line color
@@ -128,7 +136,7 @@ function RenderImage(image) {
     if (line !== undefined) {
         ctx.strokeStyle = RGBToString(line);
     } else {
-        ctx.strokeStyle = "rgb(255,255,255)";
+        ctx.strokeStyle = "white";
     }
     ctx.lineWidth = 1 / Camera.z;
 
