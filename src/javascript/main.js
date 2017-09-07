@@ -11,11 +11,14 @@ var BackCanvasHandle = null;
 var BackContextHandle = null;
 
 var time = 0;
+var scale = 400
 
 // Initialize canvas, handlers, and camera
 function Init() {
     // Get context handles
     CanvasHandle = document.getElementById("canvas");
+    CanvasHandle.width = 3 * scale;
+    CanvasHandle.height = 2 * scale;
     ContextHandle = CanvasHandle.getContext("2d");
     CanvasWidth = ContextHandle.canvas.clientWidth;
     CanvasHeight = ContextHandle.canvas.clientHeight;

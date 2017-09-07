@@ -1,6 +1,6 @@
 const right = "Right";
 const left = "Left";
-const cellSize = 20;
+const cellSize = 25;
 const squareLine = cellSize / 10;
 const arcLine = cellSize / 10;
 
@@ -66,16 +66,22 @@ function MakeBackground() {
 function RenderShapes() {
 
     // Render background
+
     BackContextHandle.lineWidth = squareLine / Camera.z;
+    var min = {R:133, G:197, B:144};
+    var max = {R:200, G:200, B:200};
+    var rand = 10;
 
     $.each(Squares, function(i, image) {
         var p =image.points[0];
+        var h = (CanvasHeight - p.y) / CanvasHeight;
+        var fill = {
+            R:Math.floor(max.R * h - min.R * (h - 1)) - Math.floor(Math.random() * h * rand),
+            G:Math.floor(max.G * h - min.G * (h - 1)) - Math.floor(Math.random() * h * rand),
+            B:Math.floor(max.B * h - min.B * (h - 1)) - Math.floor(Math.random() * h * rand),
+        };
         var newImage = {
-            fill: {
-                R:Math.floor(256*(Math.cos(2 * Math.PI * (p.y+time) / CanvasHeight)+1)/2),
-                G:Math.floor(256*(Math.sin(2 * Math.PI * (p.x+time) / CanvasWidth)+1)/2),
-                B:0,
-            },
+            fill: fill
         };
         newImage.points = image.points.map(function(point) {
             return {
@@ -90,6 +96,9 @@ function RenderShapes() {
 
     var len = Arcs.length;
     var cStep = 256 / Arcs.length;
+    var pi2 = 2 * Math.PI;
+    var min = {R:180, G:180, B:180};
+    var max = {R:255, G:255, B:255};
 
     $.each(Arcs, function(i, arc) {
 
@@ -98,7 +107,7 @@ function RenderShapes() {
         var r = cellSize/2 / Camera.z;
 
         // White outline
-        BackContextHandle.lineWidth = 2*arcLine / Camera.z;
+        BackContextHandle.lineWidth = 3*arcLine / Camera.z;
         BackContextHandle.strokeStyle = "white";
 
         BackContextHandle.beginPath();
@@ -107,11 +116,13 @@ function RenderShapes() {
 
         // Color arc
         BackContextHandle.lineWidth = arcLine / Camera.z;
-        BackContextHandle.strokeStyle = RGBToString({
-            R:0,
-            G:Math.floor(256*(Math.sin(2 * Math.PI * (i+time) / len)+1)/2),
-            B:Math.floor(256*(Math.cos(2 * Math.PI * (i+time) / len)+1)/2),
-        });
+        var fill = {
+            R:Math.floor(((max.R - min.R)/2) * (Math.cos(pi2 * ((2*i+time)/len + 1/4)) + 1) + min.R),
+            G:Math.floor(((max.G - min.G)/2) * (Math.cos(pi2 * ((i+time)/len + 0/4)) + 1) + min.G),
+            B:Math.floor(((max.B - min.B)/2) * (Math.cos(pi2 * ((i+time)/len + 2/4)) + 1) + min.B),
+        };
+        console.log(fill);
+        BackContextHandle.strokeStyle = RGBToString(fill);
 
         BackContextHandle.beginPath();
         BackContextHandle.arc(x, y, r, arc.start, arc.end);
