@@ -1,7 +1,7 @@
 const right = "Right";
 const left = "Left";
 const cellSize = scale / 16;
-const squareLine = cellSize / 10;
+const squareLine = cellSize / 100;
 const arcLine = cellSize / 10;
 
 var Squares = [];
@@ -148,7 +148,6 @@ function RenderImage(image) {
     } else {
         ctx.strokeStyle = "white";
     }
-    ctx.lineWidth = 1 / Camera.z;
 
     // Draw from point to point
     var points = image.points;
