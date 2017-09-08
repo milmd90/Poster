@@ -67,6 +67,7 @@ $( document ).ready(function() {
 
     // Create hi res image
     var imgData = document.getElementById('canvas').toDataURL("image/jpeg", 1.0);
-    $('#image').html('<img src="'+imgData+'"/>');
+    document.getElementById('canvas').style.display = "none";
+    $('#image').html('<img src="'+imgData+'" width="800px"/>');
 
 });
