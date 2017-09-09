@@ -1,3 +1,15 @@
+//Global variables
+var RenderData = [];
+
+//Lifecycle methods
+function Render() {
+    // $.each(RenderData, function(layer) {
+    //     layer.render()
+    // });
+    RenderShapes();
+}
+
+// Util functions
 function dirToCord(dir) {
     switch ((dir+4)%4) {
         case 0:

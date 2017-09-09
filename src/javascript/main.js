@@ -44,9 +44,9 @@ function UpdateRender() {
     // Set background
     BackContextHandle.fillRect(0, 0, CanvasWidth, CanvasHeight);
 
-    // RenderShapes
+    // Render
     BackContextHandle.save();
-    RenderShapes();
+    Render();
     BackContextHandle.restore();
 
     // Swap the backbuffer with the frontbuffer
