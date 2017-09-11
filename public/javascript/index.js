@@ -60,14 +60,14 @@ $( document ).ready(function() {
             return false;
         });
 
-    Init();
-    MakePoster();
-    UpdateRender();
+    // Init();
+    // MakePoster();
+    // UpdateRender();
     // ContRender();
 
     // Create hi res image
-    var imgData = document.getElementById('canvas').toDataURL("image/jpeg", 1.0);
-    document.getElementById('canvas').style.display = "none";
-    $('#image').html('<img src="'+imgData+'" width="800px"/>');
+    // var imgData = document.getElementById('canvas').toDataURL("image/jpeg", 1.0);
+    // document.getElementById('canvas').style.display = "none";
+    // $('#image').html('<img src="'+imgData+'" width="800px"/>');
 
 });
