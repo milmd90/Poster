@@ -1,5 +1,5 @@
 {
-  "name": "Poster",
+  "name": "canvas-illustrator",
   "version": "1.0.0",
   "description": "",
   "main": "index.html",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/milmd90/Poster.git"
+    "url": "git+https://github.com/milmd90/canvas-illustrator.git"
   },
   "author": "milmd90",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/milmd90/Poster/issues"
+    "url": "https://github.com/milmd90/canvas-illustrator/issues"
   },
-  "homepage": "https://github.com/milmd90/Poster#readme",
+  "homepage": "https://github.com/milmd90/canvas-illustrator#readme",
   "dependencies": {
     "express": "^4.15.4"
   }
