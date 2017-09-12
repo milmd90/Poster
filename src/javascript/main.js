@@ -41,7 +41,7 @@ function Init() {
     Camera = {x:0, y:0, z:1};
 }
 
-// UpdateRender renders whats in Lines and then updates the canvas
+// UpdateRender renders the design and then updates the canvas
 function UpdateRender() {
     // Set background
     BackContextHandle.fillRect(0, 0, CanvasWidth, CanvasHeight);
