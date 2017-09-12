@@ -11,7 +11,7 @@ var BackCanvasHandle = null;
 var BackContextHandle = null;
 
 var time = 0;
-var scale = 400;
+var scale = 400; // 400 / 3200
 var ratioX = 3;
 var ratioY = 2;
 

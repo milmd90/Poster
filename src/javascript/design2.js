@@ -1,5 +1,6 @@
 const baseNum = 25;
 const cellSize = scale / baseNum;
+const borderSize = cellSize * 2;
 const lineSize = cellSize / 10;
 const numX = baseNum * ratioX;
 const numY = baseNum * ratioY;
@@ -89,12 +90,27 @@ function MakePoster() {
 
 function Render() {
 
+    //Draw white frams
+    BackContextHandle.fillStyle="white";
+    var x = -Camera.x;
+    var y = -Camera.y;
+    var w = CanvasWidth / Camera.z;
+    var h = CanvasHeight / Camera.z;
+    BackContextHandle.fillRect(-Camera.x,-Camera.y,CanvasWidth / Camera.z, CanvasHeight / Camera.z);
+
+    // Draw grey background
+    BackContextHandle.fillStyle="#eeeeee";
+    x = -Camera.x + borderSize;
+    y = -Camera.y + borderSize;
+    w = (CanvasWidth - 2*borderSize) / Camera.z;
+    h = (CanvasHeight - 2*borderSize) / Camera.z;
+    BackContextHandle.fillRect(x, y, w, h);
+
+    // Set properties for lines
     BackContextHandle.lineWidth = lineSize / Camera.z;
     BackContextHandle.strokeStyle = "white";
+    BackContextHandle.lineCap="round";
 
-    //Draw background
-    BackContextHandle.fillStyle="#eeeeee";
-    BackContextHandle.fillRect(-Camera.x,-Camera.y,CanvasWidth / Camera.z, CanvasHeight / Camera.z);
 
     // Render lines
     $.each(Lines, function(i, line) {
