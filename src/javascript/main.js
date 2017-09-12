@@ -11,14 +11,16 @@ var BackCanvasHandle = null;
 var BackContextHandle = null;
 
 var time = 0;
-var scale = 3200;
+var scale = 400;
+var ratioX = 3;
+var ratioY = 2;
 
 // Initialize canvas, handlers, and camera
 function Init() {
     // Get context handles
     CanvasHandle = document.getElementById("canvas");
-    CanvasHandle.width = 3 * scale;
-    CanvasHandle.height = 2 * scale;
+    CanvasHandle.width = ratioX * scale;
+    CanvasHandle.height = ratioY * scale;
     ContextHandle = CanvasHandle.getContext("2d");
     CanvasWidth = ContextHandle.canvas.clientWidth;
     CanvasHeight = ContextHandle.canvas.clientHeight;
@@ -39,14 +41,14 @@ function Init() {
     Camera = {x:0, y:0, z:1};
 }
 
-// UpdateRender renders whats in Squares and then updates the canvas
+// UpdateRender renders whats in Lines and then updates the canvas
 function UpdateRender() {
     // Set background
     BackContextHandle.fillRect(0, 0, CanvasWidth, CanvasHeight);
 
-    // RenderShapes
+    // Render
     BackContextHandle.save();
-    RenderShapes();
+    Render();
     BackContextHandle.restore();
 
     // Swap the backbuffer with the frontbuffer
