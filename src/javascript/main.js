@@ -11,7 +11,7 @@ var BackCanvasHandle = null;
 var BackContextHandle = null;
 
 var time = 0;
-var scale = 3200;
+var scale = 400;
 
 // Initialize canvas, handlers, and camera
 function Init() {
