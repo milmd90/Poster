@@ -63,7 +63,7 @@ function MakeBackground() {
 
 
 
-function RenderShapes() {
+function Render() {
 
     // Render background
 
@@ -249,4 +249,19 @@ function hopLeft() {
         y:cursor.y + n.y,
     };
     onThe = right;
+}
+
+function dirToCord(dir) {
+    switch ((dir+4)%4) {
+        case 0:
+            return {x:1, y:0};
+        case 1:
+            return {x:0, y:1};
+        case 2:
+            return {x:-1, y:0};
+        case 3:
+            return {x:0, y:-1};
+        default:
+            console.log("Error: dirToCord "+ dir%4);
+    }
 }
